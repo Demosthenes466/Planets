@@ -3,10 +3,13 @@ require 'gosu'
 
 class Gamewindow < Gosu::Window
 	def initialize
-		super 1024, 1024
-		self.caption = "Planet Simulation"
+		@width = 1000
+		@height = 1000
+		super @width, @height
 		@planets = Array.new
 		@background_image = Gosu::Image.new("space.jpg", :tileable => true)
+		@universe_size = 0
+		@line = 0
 	end
 
 	def setup_planets
@@ -14,10 +17,17 @@ class Gamewindow < Gosu::Window
 		file = File.open("Planets.txt", "r")
 		file.each_line do |line|
 			array = line.chop.split(" ")
-			@planets.push(Planet.new(array[0].to_f, array[1].to_f, array[2].to_f, array[3].to_f, array[4], array[5]))
+			if @line == 1
+				@universe_size = array[0].to_f*2
+			elsif @line >= 2
+				array[0] = array[0].to_f/@universe_size*@width + @width/2
+				array[1] = array[1].to_f/@universe_size*@height + @height/2
+			  @planets.push(Planet.new(array[0].to_f, array[1].to_f, array[2].to_f, array[3].to_f, array[4], array[5]))
+			end
+			@line += 1
 		end
-		@planets.delete_at(0)
-		@planets.delete_at(0)
+		# @planets.delete_at(0)
+		# @planets.delete_at(0)
 		print @planets
 	end
 
@@ -26,9 +36,6 @@ class Gamewindow < Gosu::Window
 			for k in 0...(@planets.length-1) do 	
 				if i != k 
 					@planets[i].forces(@planets[k])
-					print @planets[i].file
-					print @planets[k].file
-					puts
 				end
 			end
 		end
@@ -36,6 +43,7 @@ class Gamewindow < Gosu::Window
 
 	def draw
 		@background_image.draw(0,0,0)
+		@planets.each{|planet| planet.draw}
 	end
 
 end
