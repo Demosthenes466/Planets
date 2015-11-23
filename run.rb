@@ -10,6 +10,8 @@ class Gamewindow < Gosu::Window
 		@background_image = Gosu::Image.new("space.jpg", :tileable => true)
 		@universe_size = 0
 		@line = 0
+		@win_x = 0
+		@win_y = 0
 	end
 
 	def setup_planets
@@ -20,14 +22,14 @@ class Gamewindow < Gosu::Window
 			if @line == 1
 				@universe_size = array[0].to_f*2
 			elsif @line >= 2
-				array[0] = array[0].to_f/@universe_size*@width + @width/2
-				array[1] = array[1].to_f/@universe_size*@height + @height/2
-			  @planets.push(Planet.new(array[0].to_f, array[1].to_f, array[2].to_f, array[3].to_f, array[4], array[5]))
+				@win_x = array[0].to_f/@universe_size*@width + @width/2
+				@win_y = array[1].to_f/@universe_size*@height + @height/2
+			  @planets.push(Planet.new(array[0].to_f, array[1].to_f, array[2].to_f, array[3].to_f, array[4], @win_x, @win_y, @universe_size, array[5]))
 			end
 			@line += 1
 		end
 		# @planets.delete_at(0)
-		# @planets.delete_at(0)
+		# @planets.delete_at(0)no
 		print @planets
 	end
 
@@ -45,8 +47,8 @@ class Gamewindow < Gosu::Window
 		@background_image.draw(0,0,0)
 		@planets.each{|planet| planet.draw}
 	end
-
 end
+
 
 window = Gamewindow.new
 window.setup_planets
