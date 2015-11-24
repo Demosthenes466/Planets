@@ -2,10 +2,10 @@ require_relative "planet"
 require 'gosu'
 
 class Gamewindow < Gosu::Window
+	attr_accessor :window_size
 	def initialize
-		@width = 1000
-		@height = 1000
-		super @width, @height
+		@window_size = 1000
+		super @window_size, @window_size
 		@planets = Array.new
 		@background_image = Gosu::Image.new("space.jpg", :tileable => true)
 		@universe_size = 0
@@ -15,27 +15,21 @@ class Gamewindow < Gosu::Window
 	end
 
 	def setup_planets
-		puts "running"
 		file = File.open("Planets.txt", "r")
 		file.each_line do |line|
 			array = line.chop.split(" ")
 			if @line == 1
 				@universe_size = array[0].to_f*2
 			elsif @line >= 2
-				@win_x = array[0].to_f/@universe_size*@width + @width/2
-				@win_y = array[1].to_f/@universe_size*@height + @height/2
-			  @planets.push(Planet.new(array[0].to_f, array[1].to_f, array[2].to_f, array[3].to_f, array[4], @win_x, @win_y, @universe_size, array[5]))
+			  @planets.push(Planet.new(array[0].to_f, array[1].to_f, array[2].to_f, array[3].to_f, array[4], @universe_size, array[5], self))
 			end
 			@line += 1
 		end
-		# @planets.delete_at(0)
-		# @planets.delete_at(0)no
-		# print @planets
 	end
 
 	def update
-		for i in 0...(@planets.length-1) do
-			for k in 0...(@planets.length-1) do 	
+		for i in 0...(@planets.length) do
+			for k in 0...(@planets.length) do 	
 				if i != k 
 					@planets[i].forces(@planets[k])
 				end
