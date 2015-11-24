@@ -30,7 +30,7 @@ class Gamewindow < Gosu::Window
 		end
 		# @planets.delete_at(0)
 		# @planets.delete_at(0)no
-		print @planets
+		# print @planets
 	end
 
 	def update
@@ -40,7 +40,11 @@ class Gamewindow < Gosu::Window
 					@planets[i].forces(@planets[k])
 				end
 			end
+		@planets[i].acceleration
+		@planets[i].velocity
+		@planets[i].position_update
 		end
+		
 	end
 
 	def draw
